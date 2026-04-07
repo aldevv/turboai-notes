@@ -1,0 +1,40 @@
+<svg width="110" height="80" viewBox="0 0 110 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Ground shadow -->
+  <ellipse cx="55" cy="75" rx="42" ry="5" fill="#C9B4A0" opacity="0.35"/>
+  <!-- Tail -->
+  <path d="M14 56 Q6 38 16 28 Q24 22 22 36" stroke="#D9A96A" stroke-width="7" stroke-linecap="round" fill="none"/>
+  <!-- Body -->
+  <ellipse cx="50" cy="58" rx="34" ry="19" fill="#D9A96A"/>
+  <!-- Body spot 1 -->
+  <ellipse cx="35" cy="55" rx="13" ry="10" fill="#2C1F10"/>
+  <!-- Body spot 2 -->
+  <ellipse cx="60" cy="63" rx="9" ry="7" fill="#2C1F10"/>
+  <!-- Neck -->
+  <ellipse cx="78" cy="52" rx="10" ry="9" fill="#D9A96A"/>
+  <!-- Head -->
+  <circle cx="86" cy="42" r="18" fill="#D9A96A"/>
+  <!-- Head spot -->
+  <ellipse cx="93" cy="37" rx="8" ry="7" fill="#2C1F10"/>
+  <!-- Left ear -->
+  <polygon points="72,28 78,16 85,28" fill="#D9A96A"/>
+  <!-- Right ear -->
+  <polygon points="85,28 92,16 98,28" fill="#D9A96A"/>
+  <!-- Ear inner left -->
+  <polygon points="74,28 78,20 83,28" fill="#EFA0A0"/>
+  <!-- Ear inner right -->
+  <polygon points="87,28 92,20 96,28" fill="#EFA0A0"/>
+  <!-- Closed eyes (sleeping arcs) -->
+  <path d="M78 42 Q81 38 84 42" stroke="#2C1F10" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <path d="M88 42 Q91 38 94 42" stroke="#2C1F10" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+  <!-- Nose -->
+  <ellipse cx="86" cy="48" rx="3" ry="2" fill="#EFA0A0"/>
+  <!-- Whiskers left -->
+  <line x1="68" y1="47" x2="80" y2="49" stroke="#2C1F10" stroke-width="0.8" opacity="0.5"/>
+  <line x1="68" y1="51" x2="80" y2="51" stroke="#2C1F10" stroke-width="0.8" opacity="0.5"/>
+  <!-- Whiskers right -->
+  <line x1="92" y1="49" x2="103" y2="47" stroke="#2C1F10" stroke-width="0.8" opacity="0.5"/>
+  <line x1="92" y1="51" x2="103" y2="51" stroke="#2C1F10" stroke-width="0.8" opacity="0.5"/>
+  <!-- Zzz -->
+  <text x="98" y="22" font-size="9" fill="#A07850" font-family="Georgia, serif" opacity="0.65" font-style="italic">z</text>
+  <text x="103" y="15" font-size="7" fill="#A07850" font-family="Georgia, serif" opacity="0.45" font-style="italic">z</text>
+</svg>

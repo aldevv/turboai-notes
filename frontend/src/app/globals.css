@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #F5F1ED;
+  --color-cat-random: #E8B4A8;
+  --color-cat-school: #F5E6C8;
+  --color-cat-personal: #B8D9D1;
+  --color-brown: #5C4033;
+  --color-brown-light: #8B6B5A;
+  --font-serif: Georgia, serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: #F5F1ED;
+  color: #5C4033;
+  font-family: Arial, Helvetica, sans-serif;
+}
