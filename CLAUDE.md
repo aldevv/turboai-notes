@@ -19,3 +19,7 @@ make docker-up    # run via Docker instead
 ```
 
 See `backend/CLAUDE.md` and `frontend/CLAUDE.md` for service-specific details.
+
+## Pull Requests
+
+Descriptions should be short and high-level — summarise what the branch does, not every file changed. One short paragraph or a few bullet points is enough.
