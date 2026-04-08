@@ -14,6 +14,7 @@ frontend/.env*.local
 # Environment
 .env
 .env.local
+.envrc
 
 # Playwright
 .playwright-mcp/
