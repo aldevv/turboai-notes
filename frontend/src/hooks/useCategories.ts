@@ -8,6 +8,7 @@ export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fetchCount, setFetchCount] = useState(0);
 
   useEffect(() => {
     let ignore = false;
@@ -31,7 +32,11 @@ export function useCategories() {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [fetchCount]);
 
-  return { categories, isLoading, error };
+  function refresh() {
+    setFetchCount((c) => c + 1);
+  }
+
+  return { categories, isLoading, error, refresh };
 }

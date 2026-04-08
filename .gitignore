@@ -22,7 +22,6 @@ frontend/.env*.local
 # Figma assets / scratch files
 *.zip
 *.fig
-plan.md
 
 # OS
 .DS_Store
