@@ -25,7 +25,7 @@ export default function NotesPage() {
     refresh: refreshNotes,
     loadMore,
   } = useNotes(activeCategoryId);
-  const { categories, error: categoryError } = useCategories();
+  const { categories, error: categoryError, refresh: refreshCategories } = useCategories();
 
   // Auth guard
   useEffect(() => {
@@ -48,6 +48,7 @@ export default function NotesPage() {
   }
 
   function handleNoteUpdated(updatedNote: Note) {
+    const categoryChanged = selectedNote?.category?.id !== updatedNote.category?.id;
     setNotes((prev) =>
       prev
         .map((n) => (n.id === updatedNote.id ? updatedNote : n))
@@ -56,6 +57,9 @@ export default function NotesPage() {
         ),
     );
     setSelectedNote(updatedNote);
+    if (categoryChanged) {
+      refreshCategories();
+    }
   }
 
   function handleSelectCategory(id: string | null) {
