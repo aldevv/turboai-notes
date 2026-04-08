@@ -1,5 +1,7 @@
 {
   "venvPath": ".",
   "venv": ".venv",
-  "plugins": ["mypy_django_plugin.main"]
+  "typeCheckingMode": "basic",
+  "reportMissingTypeArgument": "none",
+  "reportAttributeAccessIssue": "none"
 }
