@@ -28,7 +28,28 @@ apps/notes/      # Category and Note models, views, serializers
 
 ## Running
 
+**With uv (preferred):**
 ```bash
-. venv/bin/activate
+uv sync                                  # first time: creates .venv and installs deps
+uv run python manage.py runserver 8000
+```
+
+**Without uv (pip fallback):**
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install .          # prod deps from pyproject.toml
+pip install black flake8  # dev tools
 python manage.py runserver 8000
+```
+
+```bash
+# Linting / formatting
+uv run python -m black apps/ config/
+uv run python -m flake8 apps/ config/
+
+# Tests
+uv run python manage.py test
+
+# Production install (no dev tools)
+uv sync --no-group dev
 ```
