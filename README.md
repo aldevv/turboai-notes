@@ -1,5 +1,10 @@
 # TurboAI Notes
 
+[![Tests](https://github.com/aldevv/turboai-notes/actions/workflows/test.yml/badge.svg)](https://github.com/aldevv/turboai-notes/actions/workflows/test.yml)
+[![Lint](https://github.com/aldevv/turboai-notes/actions/workflows/lint.yml/badge.svg)](https://github.com/aldevv/turboai-notes/actions/workflows/lint.yml)
+[![Format](https://github.com/aldevv/turboai-notes/actions/workflows/format.yml/badge.svg)](https://github.com/aldevv/turboai-notes/actions/workflows/format.yml)
+[![Release](https://github.com/aldevv/turboai-notes/actions/workflows/release.yml/badge.svg)](https://github.com/aldevv/turboai-notes/actions/workflows/release.yml)
+
 A friendly, minimal note-taking app with automatic saving and category organisation.
 
 ## Tech Stack
