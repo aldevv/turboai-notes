@@ -14,6 +14,7 @@ export function useNotes(categoryId: string | null = null) {
 
   useEffect(() => {
     let ignore = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: reset to loading state before fetch; batched by React 18, no cascade
     setIsLoading(true);
     setError(null);
     setPage(1);

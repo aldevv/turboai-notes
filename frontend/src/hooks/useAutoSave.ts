@@ -11,8 +11,10 @@ export function useAutoSave(
 ) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onSavedRef = useRef(onSaved);
+  // eslint-disable-next-line react-hooks/refs -- intentional event-handler ref pattern: ref is only read inside setTimeout, never during render
   onSavedRef.current = onSaved;
   const onErrorRef = useRef(onError);
+  // eslint-disable-next-line react-hooks/refs -- intentional event-handler ref pattern: ref is only read inside setTimeout, never during render
   onErrorRef.current = onError;
 
   const cancel = useCallback(() => {

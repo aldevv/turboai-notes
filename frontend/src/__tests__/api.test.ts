@@ -28,9 +28,7 @@ Object.defineProperty(globalThis, 'localStorage', { value: localStorageMock });
 
 // jsdom's window.location is non-configurable; delete it first then replace with a
 // simple writable mock so clearAuth() doesn't trigger a real navigation.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (window as any).location;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (window as any).location = { href: '' };
 
 // Reset module-level refresh state between tests
