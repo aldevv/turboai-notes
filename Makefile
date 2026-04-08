@@ -37,7 +37,7 @@ docker-build:
 
 docker-up:
 	@touch backend/db.sqlite3
-	docker compose up
+	docker compose up --build
 
 docker-down:
 	docker compose down

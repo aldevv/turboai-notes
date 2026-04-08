@@ -12,6 +12,8 @@ RUN uv sync --no-group dev --frozen
 # Copy source
 COPY . .
 
+ENV PATH="/app/.venv/bin:$PATH"
+
 EXPOSE 8000
 
-CMD ["sh", "-c", "uv run --no-sync python manage.py migrate && exec uv run --no-sync gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"]
+CMD ["sh", "-c", "python manage.py migrate && exec gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 2"]
