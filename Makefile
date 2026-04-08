@@ -8,34 +8,19 @@ all: install migrate dev
 install: install-backend install-frontend
 
 install-backend:
-	cd backend && \
-	if command -v uv >/dev/null 2>&1; then \
-		uv sync; \
-	else \
-		python -m venv .venv && . .venv/bin/activate && pip install . && pip install black flake8; \
-	fi
+	./scripts/backend.sh install
 
 install-frontend:
-	cd frontend && npm install
+	./scripts/frontend.sh install
 
 migrate:
-	cd backend && \
-	if command -v uv >/dev/null 2>&1; then \
-		uv run python manage.py migrate; \
-	else \
-		. .venv/bin/activate && python manage.py migrate; \
-	fi
+	./scripts/backend.sh migrate
 
 backend:
-	cd backend && \
-	if command -v uv >/dev/null 2>&1; then \
-		uv run python manage.py runserver 8000; \
-	else \
-		. .venv/bin/activate && python manage.py runserver 8000; \
-	fi
+	./scripts/backend.sh run
 
 frontend:
-	cd frontend && npm run dev
+	./scripts/frontend.sh run
 
 dev:
 	$(MAKE) backend &
