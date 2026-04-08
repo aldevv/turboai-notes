@@ -2,8 +2,6 @@
 
 Django 5 + Django REST Framework. SQLite. JWT auth via `djangorestframework-simplejwt`.
 
-Dependencies managed with **uv** (`pyproject.toml` + `uv.lock`). Dockerised via `backend/Dockerfile` and `docker-compose.yml` in the repo root.
-
 ## Structure
 
 ```
