@@ -20,11 +20,14 @@ class SignupView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
-        return Response({
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
-            'user': {'id': user.id, 'email': user.email},
-        }, status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "access": str(refresh.access_token),
+                "refresh": str(refresh),
+                "user": {"id": user.id, "email": user.email},
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class LoginView(TokenObtainPairView):
@@ -35,10 +38,10 @@ class LoginView(TokenObtainPairView):
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         if response.status_code == 200:
-            email = request.data.get('email') or request.data.get('username')
+            email = request.data.get("email") or request.data.get("username")
             try:
                 user = User.objects.get(email=email)
-                response.data['user'] = {'id': user.id, 'email': user.email}
+                response.data["user"] = {"id": user.id, "email": user.email}
             except User.DoesNotExist:
                 pass  # simplejwt already validated; this is decorative only
         return response

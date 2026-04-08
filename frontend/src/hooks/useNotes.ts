@@ -4,19 +4,25 @@ import { useEffect, useState } from 'react';
 import * as api from '@/lib/api';
 import { Note } from '@/types';
 
-export function useNotes(categoryId?: string) {
+export function useNotes(categoryId: string | null = null) {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let ignore = false;
     setIsLoading(true);
     setError(null);
-    api.getNotes(categoryId)
+    setPage(1);
+    api
+      .getNotes({ categoryId: categoryId ?? undefined })
       .then((data) => {
         if (!ignore) {
-          setNotes(data);
+          setNotes(data.results);
+          setHasMore(data.next !== null);
         }
       })
       .catch((err) => {
@@ -33,24 +39,30 @@ export function useNotes(categoryId?: string) {
     return () => {
       ignore = true;
     };
-  }, [categoryId]);
+  }, [categoryId, refreshKey]);
 
-  async function refresh() {
-    setIsLoading(true);
-    setError(null);
+  function refresh() {
+    setRefreshKey((k) => k + 1);
+  }
+
+  async function loadMore() {
+    if (!hasMore) return;
+    const nextPage = page + 1;
     try {
-      const data = await api.getNotes(categoryId);
-      setNotes(data);
+      const data = await api.getNotes({
+        categoryId: categoryId ?? undefined,
+        page: nextPage,
+      });
+      setNotes((prev) => [...prev, ...data.results]);
+      setHasMore(data.next !== null);
+      setPage(nextPage);
     } catch (err) {
-      console.error('Failed to fetch notes', err);
-      setError('Failed to load notes. Please try again.');
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to load more notes', err);
     }
   }
 
   async function createNote(): Promise<Note> {
-    const note = await api.createNote();
+    const note = await api.createNote({ title: 'New Note' });
     setNotes((prev) => [note, ...prev]);
     return note;
   }
@@ -60,5 +72,15 @@ export function useNotes(categoryId?: string) {
     setNotes((prev) => prev.filter((n) => n.id !== id));
   }
 
-  return { notes, setNotes, isLoading, error, createNote, deleteNote, refresh };
+  return {
+    notes,
+    setNotes,
+    isLoading,
+    error,
+    hasMore,
+    createNote,
+    deleteNote,
+    refresh,
+    loadMore,
+  };
 }

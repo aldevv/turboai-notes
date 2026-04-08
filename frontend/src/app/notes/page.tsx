@@ -15,10 +15,17 @@ export default function NotesPage() {
   const { user, isLoading: authLoading } = useAuth();
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const { notes, setNotes, isLoading: notesLoading, error: notesError, createNote, refresh: refreshNotes } = useNotes(
-    activeCategoryId ?? undefined
-  );
-  const { categories } = useCategories();
+  const {
+    notes,
+    setNotes,
+    isLoading: notesLoading,
+    error: notesError,
+    hasMore,
+    createNote,
+    refresh: refreshNotes,
+    loadMore,
+  } = useNotes(activeCategoryId);
+  const { categories, error: categoryError } = useCategories();
 
   // Auth guard
   useEffect(() => {
@@ -41,13 +48,13 @@ export default function NotesPage() {
   }
 
   function handleNoteUpdated(updatedNote: Note) {
-    setNotes((prev) => {
-      const updated = prev.map((n) => (n.id === updatedNote.id ? updatedNote : n));
-      return updated.sort(
-        (a, b) =>
-          new Date(b.last_edited_at).getTime() - new Date(a.last_edited_at).getTime()
-      );
-    });
+    setNotes((prev) =>
+      prev
+        .map((n) => (n.id === updatedNote.id ? updatedNote : n))
+        .sort(
+          (a, b) => new Date(b.last_edited_at).getTime() - new Date(a.last_edited_at).getTime(),
+        ),
+    );
     setSelectedNote(updatedNote);
   }
 
@@ -62,6 +69,7 @@ export default function NotesPage() {
         categories={categories}
         activeCategoryId={activeCategoryId}
         onSelectCategory={handleSelectCategory}
+        categoryError={categoryError}
       />
 
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -69,7 +77,11 @@ export default function NotesPage() {
           <button
             onClick={handleNewNote}
             className="flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80 active:opacity-60"
-            style={{ border: '1.5px solid #A07850', backgroundColor: 'transparent', color: '#6B4E30' }}
+            style={{
+              border: '1.5px solid #A07850',
+              backgroundColor: 'transparent',
+              color: '#6B4E30',
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -89,13 +101,31 @@ export default function NotesPage() {
           </button>
         </header>
 
-        <NoteGrid
-          notes={notes}
-          isLoading={notesLoading}
-          error={notesError}
-          onRetry={refreshNotes}
-          onSelectNote={setSelectedNote}
-        />
+        <div className="flex-1 overflow-auto flex flex-col">
+          <NoteGrid
+            notes={notes}
+            isLoading={notesLoading}
+            error={notesError}
+            onRetry={refreshNotes}
+            onSelectNote={setSelectedNote}
+          />
+          {hasMore && (
+            <div className="flex justify-center py-4 flex-shrink-0">
+              <button
+                onClick={loadMore}
+                disabled={notesLoading}
+                className="px-4 py-2 rounded-full text-sm font-medium transition-opacity hover:opacity-80 active:opacity-60 disabled:opacity-40"
+                style={{
+                  border: '1.5px solid #A07850',
+                  color: '#6B4E30',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                Load more
+              </button>
+            </div>
+          )}
+        </div>
       </main>
 
       {selectedNote && (

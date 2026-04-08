@@ -1,14 +1,17 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password as dj_validate
+from django.core.exceptions import ValidationError as DjangoValidationError
+from rest_framework import exceptions, serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.settings import api_settings
 
 from apps.notes.models import Category
 
-
 DEFAULT_CATEGORIES = [
-    {'name': 'Random Thoughts', 'color': '#E8B4A8'},
-    {'name': 'School',          'color': '#F5E6C8'},
-    {'name': 'Personal',        'color': '#B8D9D1'},
+    {"name": "Random Thoughts", "color": "#E8B4A8"},
+    {"name": "School", "color": "#F5E6C8"},
+    {"name": "Personal", "color": "#B8D9D1"},
 ]
 
 
@@ -22,8 +25,6 @@ class SignupSerializer(serializers.Serializer):
         return value
 
     def validate_password(self, value):
-        from django.contrib.auth.password_validation import validate_password as dj_validate
-        from django.core.exceptions import ValidationError as DjangoValidationError
         try:
             dj_validate(value)
         except DjangoValidationError as e:
@@ -32,9 +33,9 @@ class SignupSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(
-            username=validated_data['email'],
-            email=validated_data['email'],
-            password=validated_data['password'],
+            username=validated_data["email"],
+            email=validated_data["email"],
+            password=validated_data["password"],
         )
         for cat in DEFAULT_CATEGORIES:
             Category.objects.create(user=user, **cat)
@@ -48,34 +49,30 @@ class EmailTokenObtainPairSerializer(TokenObtainPairSerializer):
     At signup we set username=email, so we pass the email value
     as the `username` kwarg to authenticate().
     """
-    username_field = 'email'
+
+    username_field = "email"
 
     def validate(self, attrs):
         # Re-key 'email' -> 'username' so Django's auth backend can find the user.
-        from django.contrib.auth import authenticate
-        from rest_framework import exceptions
-        from rest_framework_simplejwt.settings import api_settings
-        from rest_framework_simplejwt.tokens import RefreshToken
-
-        email = attrs.get('email', '')
-        password = attrs.get('password', '')
+        email = attrs["email"]
+        password = attrs["password"]
 
         user = authenticate(
-            request=self.context.get('request'),
+            request=self.context.get("request"),
             username=email,
             password=password,
         )
 
         if not api_settings.USER_AUTHENTICATION_RULE(user):
             raise exceptions.AuthenticationFailed(
-                self.error_messages['no_active_account'],
-                'no_active_account',
+                self.error_messages["no_active_account"],
+                "no_active_account",
             )
 
         self.user = user
-        refresh = self.get_token(self.user)
+        refresh = self.get_token(user)
         data = {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
         }
         return data

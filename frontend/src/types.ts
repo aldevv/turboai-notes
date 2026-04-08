@@ -1,3 +1,8 @@
+export interface AuthUser {
+  id: number;
+  email: string;
+}
+
 export interface Category {
   id: string;
   name: string;
@@ -23,5 +28,12 @@ export interface NoteUpdatePayload {
 export interface AuthResponse {
   access: string;
   refresh: string;
-  user: { id: number; email: string };
+  user: AuthUser;
+}
+
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
 }

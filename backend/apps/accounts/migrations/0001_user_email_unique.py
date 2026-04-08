@@ -5,7 +5,7 @@ class Migration(migrations.Migration):
     """Add a unique index on auth_user.email at the DB level."""
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [

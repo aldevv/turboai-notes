@@ -8,26 +8,34 @@ interface Props {
   categories: Category[];
   activeCategoryId: string | null;
   onSelectCategory: (id: string | null) => void;
+  categoryError?: string | null;
 }
 
-export function Sidebar({ categories, activeCategoryId, onSelectCategory }: Props) {
+export function Sidebar({ categories, activeCategoryId, onSelectCategory, categoryError }: Props) {
   const { logout } = useAuth();
 
   return (
-    <aside
-      className="w-64 h-screen flex flex-col pt-8 px-5"
-      style={{ backgroundColor: '#F5F0E8' }}
-    >
+    <aside className="w-64 h-screen flex flex-col pt-8 px-5" style={{ backgroundColor: '#F5F0E8' }}>
       <nav className="flex-1 space-y-1 overflow-y-auto">
         {/* All Categories row */}
         <button
           onClick={() => onSelectCategory(null)}
           className="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-left transition-colors"
-          style={{ color: activeCategoryId === null ? '#000000' : 'rgba(0,0,0,0.5)' }}
+          style={{
+            color: activeCategoryId === null ? '#000000' : 'rgba(0,0,0,0.5)',
+          }}
         >
           <span className="text-sm font-semibold">All Categories</span>
         </button>
 
+        {categoryError && (
+          <p
+            className="text-xs px-2 py-1 rounded"
+            style={{ color: '#9B1C1C', backgroundColor: '#FEF2F2' }}
+          >
+            {categoryError}
+          </p>
+        )}
         <div className="mt-1 space-y-0.5">
           {categories.map((cat) => (
             <SidebarCategoryItem

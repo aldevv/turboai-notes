@@ -18,6 +18,8 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
   const [content, setContent] = useState(note.content);
   const [currentNote, setCurrentNote] = useState(note);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+  const [closeBlocked, setCloseBlocked] = useState(false);
   const [isCategoryUpdating, setIsCategoryUpdating] = useState(false);
   const pendingPayloadRef = useRef<{ title?: string; content?: string } | null>(null);
   const { save: autoSave, cancel: cancelAutoSave } = useAutoSave(
@@ -28,9 +30,9 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
       setCurrentNote(saved);
       onNoteUpdated(saved);
     },
-    (_err) => {
+    () => {
       setSaveError('Failed to save. Changes may not be persisted.');
-    }
+    },
   );
 
   function handleTitleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -66,31 +68,41 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
   }
 
   async function handleClose() {
-    // Cancel the debounce timer and flush any pending auto-save synchronously
     cancelAutoSave();
     if (pendingPayloadRef.current) {
+      setIsClosing(true);
       try {
         const updated = await updateNote(note.id, pendingPayloadRef.current);
         onNoteUpdated(updated);
-      } catch (err) {
-        console.error('Failed to flush save on close', err);
+        pendingPayloadRef.current = null;
+        onClose();
+      } catch {
+        setSaveError('Failed to save. Retry or discard changes to close.');
+        setCloseBlocked(true);
+        setIsClosing(false);
       }
-      pendingPayloadRef.current = null;
+    } else {
+      onClose();
     }
+  }
+
+  function handleDiscardAndClose() {
+    pendingPayloadRef.current = null;
+    setCloseBlocked(false);
+    setSaveError(null);
     onClose();
   }
 
   const bgColor = currentNote.category?.color ?? '#F5F1ED';
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex flex-col"
-      style={{ backgroundColor: bgColor }}
-    >
+    <div className="fixed inset-0 z-50 flex flex-col" style={{ backgroundColor: bgColor }}>
       {/* Top bar */}
       <div
         className="flex items-center justify-between px-6 py-4 border-b"
-        style={{ borderColor: `${bgColor === '#F5F1ED' ? '#DDD0C8' : `${bgColor}80`}` }}
+        style={{
+          borderColor: bgColor === '#F5F1ED' ? '#DDD0C8' : `${bgColor}80`,
+        }}
       >
         <div className="flex items-center gap-3">
           <select
@@ -98,7 +110,10 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
             onChange={handleCategoryChange}
             disabled={isCategoryUpdating}
             className="text-sm px-3 py-1.5 rounded-xl border-0 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#5C4033]/20 disabled:opacity-50 disabled:cursor-wait"
-            style={{ backgroundColor: 'rgba(255,255,255,0.5)', color: '#5C4033' }}
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.5)',
+              color: '#5C4033',
+            }}
           >
             <option value="">No category</option>
             {categories.map((cat) => (
@@ -108,12 +123,26 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
             ))}
           </select>
           {saveError && (
-            <span
-              className="text-xs px-2 py-1 rounded"
+            <div
+              className="flex items-center gap-2 text-xs px-2 py-1 rounded"
               style={{ color: '#9B1C1C', backgroundColor: '#FEF2F2' }}
             >
-              {saveError}
-            </span>
+              <span>{saveError}</span>
+              {closeBlocked && (
+                <>
+                  <button
+                    onClick={handleClose}
+                    disabled={isClosing}
+                    className="underline font-medium disabled:opacity-50"
+                  >
+                    Retry
+                  </button>
+                  <button onClick={handleDiscardAndClose} className="underline font-medium">
+                    Discard and close
+                  </button>
+                </>
+              )}
+            </div>
           )}
         </div>
 
@@ -123,7 +152,8 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
           </span>
           <button
             onClick={handleClose}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/10"
+            disabled={isClosing}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-black/10 disabled:opacity-50"
             style={{ color: '#5C4033' }}
             aria-label="Close note"
           >
@@ -152,6 +182,7 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
           onChange={handleTitleChange}
           placeholder="Untitled"
           rows={2}
+          maxLength={500}
           className="w-full resize-none bg-transparent border-0 outline-none text-3xl font-bold leading-snug placeholder-[#C4A99A] mb-4"
           style={{ fontFamily: 'Georgia, serif', color: '#5C4033' }}
         />
@@ -159,6 +190,7 @@ export function NoteEditor({ note, categories, onClose, onNoteUpdated }: Props) 
           value={content}
           onChange={handleContentChange}
           placeholder="Start writing..."
+          maxLength={50000}
           className="flex-1 w-full resize-none bg-transparent border-0 outline-none text-base leading-relaxed placeholder-[#C4A99A]"
           style={{ color: '#5C4033', minHeight: '60vh' }}
         />

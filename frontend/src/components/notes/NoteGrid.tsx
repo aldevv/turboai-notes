@@ -27,12 +27,10 @@ export function NoteGrid({ notes, isLoading, error, onRetry, onSelectNote }: Pro
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 gap-3">
-        <p className="text-sm" style={{ color: '#8B6B5A' }}>{error}</p>
-        <button
-          onClick={onRetry}
-          className="text-sm underline"
-          style={{ color: '#5C4033' }}
-        >
+        <p className="text-sm" style={{ color: '#8B6B5A' }}>
+          {error}
+        </p>
+        <button onClick={onRetry} className="text-sm underline" style={{ color: '#5C4033' }}>
           Try again
         </button>
       </div>

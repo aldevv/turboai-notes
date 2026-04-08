@@ -4,24 +4,25 @@ import { useEffect, useState } from 'react';
 import { getCategories } from '@/lib/api';
 import { Category } from '@/types';
 
-const CATEGORY_ORDER = ['Random Thoughts', 'School', 'Personal'];
-
 export function useCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let ignore = false;
     getCategories()
       .then((cats) => {
         if (!ignore) {
-          const sorted = [...cats].sort(
-            (a, b) => CATEGORY_ORDER.indexOf(a.name) - CATEGORY_ORDER.indexOf(b.name)
-          );
-          setCategories(sorted);
+          setCategories(cats);
         }
       })
-      .catch((err) => console.error('Failed to fetch categories', err))
+      .catch((err) => {
+        console.error('Failed to fetch categories', err);
+        if (!ignore) {
+          setError('Failed to load categories.');
+        }
+      })
       .finally(() => {
         if (!ignore) {
           setIsLoading(false);
@@ -32,5 +33,5 @@ export function useCategories() {
     };
   }, []);
 
-  return { categories, isLoading };
+  return { categories, isLoading, error };
 }

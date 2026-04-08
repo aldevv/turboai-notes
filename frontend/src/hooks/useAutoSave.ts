@@ -7,7 +7,7 @@ import { Note, NoteUpdatePayload } from '@/types';
 export function useAutoSave(
   noteId: string,
   onSaved?: (note: Note) => void,
-  onError?: (err: unknown) => void
+  onError?: (err: unknown) => void,
 ) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const onSavedRef = useRef(onSaved);
@@ -34,14 +34,14 @@ export function useAutoSave(
           });
       }, 500);
     },
-    [noteId, cancel]
+    [noteId, cancel],
   );
 
   useEffect(
     () => () => {
       cancel();
     },
-    [cancel]
+    [cancel],
   );
 
   return { save, cancel };

@@ -34,7 +34,11 @@ export function NoteCard({ note, onSelect }: Props) {
 
       <h3
         className="font-bold leading-tight mb-2"
-        style={{ fontFamily: 'Georgia, serif', color: '#3B2314', fontSize: '1.75rem' }}
+        style={{
+          fontFamily: 'Georgia, serif',
+          color: '#3B2314',
+          fontSize: '1.75rem',
+        }}
       >
         {note.title || 'Untitled'}
       </h3>

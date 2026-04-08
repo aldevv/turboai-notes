@@ -20,9 +20,7 @@ export function SidebarCategoryItem({ category, isActive, onClick }: Props) {
         style={{ backgroundColor: category.color }}
       />
       <span className="flex-1 text-sm truncate">{category.name}</span>
-      {category.note_count !== undefined && (
-        <span className="text-xs">{category.note_count}</span>
-      )}
+      {category.note_count !== undefined && <span className="text-xs">{category.note_count}</span>}
     </button>
   );
 }
