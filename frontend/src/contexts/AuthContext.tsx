@@ -18,6 +18,9 @@ const AuthContext = createContext<AuthContextValue>({
 });
 
 function readUserFromStorage(): AuthUser | null {
+  if (typeof window === 'undefined') {
+    return null;
+  }
   const token = localStorage.getItem('access_token');
   if (!token) return null;
   try {
