@@ -16,13 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
         with:
-          enable-cache: true
+          python-version: '3.12'
 
-      - run: uv sync
+      - run: pip install black
 
-      - run: uv run black --check .
+      - run: black --check .
 
   prettier:
     name: Prettier (JS/TS)

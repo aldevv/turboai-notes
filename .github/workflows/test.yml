@@ -35,12 +35,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
         with:
-          enable-cache: true
+          python-version: '3.12'
 
-      - run: uv sync
+      - run: pip install .
 
-      - run: uv run python manage.py test
+      - run: python manage.py test
         env:
           SECRET_KEY: test-secret-key-for-ci-only
