@@ -12,25 +12,35 @@ A friendly, minimal note-taking app with automatic saving and category organisat
 
 ## How to Run
 
+### Local
+
 ```bash
 make
 ```
 
-That's it — installs dependencies, runs migrations, and starts both servers.
+Installs dependencies (uv if available, pip fallback), runs migrations, and starts both servers.
 
 | URL | Service |
 |-----|---------|
 | `http://localhost:3000` | Frontend |
 | `http://localhost:8000` | Backend API |
 
-### Individual targets
-
 ```bash
-make backend    # Django only (port 8000)
-make frontend   # Next.js only (port 3000)
+make backend    # Django dev server only (port 8000)
+make frontend   # Next.js dev server only (port 3000)
 make migrate    # Run DB migrations
 make install    # Install all dependencies
 ```
+
+### Docker
+
+```bash
+make docker-build   # Build images
+make docker-up      # Start both services
+make docker-down    # Stop and remove containers
+```
+
+Same URLs apply. Requires Docker with Compose.
 
 ## Design
 
